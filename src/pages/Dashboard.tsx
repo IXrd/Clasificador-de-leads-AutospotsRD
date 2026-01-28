@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { LogOut, Download } from "lucide-react";
 import LeadFormDialog from "@/components/LeadFormDialog";
 import LeadsTable, { type Lead } from "@/components/LeadsTable";
 import DashboardStats from "@/components/DashboardStats";
 import { Toaster } from "@/components/ui/toaster";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -20,6 +22,33 @@ const Dashboard = () => {
 
   const handleLeadCreated = () => {
     setRefreshTrigger((prev) => prev + 1);
+  };
+
+  const handleExportCSV = () => {
+    if (leads.length === 0) return;
+
+    const headers = ["Fecha", "Nombre", "Teléfono", "Vehículo", "Clasificación", "Estado"];
+    const rows = leads.map((lead) => [
+      format(new Date(lead.created_at), "dd/MM/yyyy", { locale: es }),
+      lead.nombre,
+      lead.telefono,
+      lead.vehiculo_interes,
+      lead.clasificacion || "Pendiente",
+      lead.estado,
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `leads_${format(new Date(), "yyyy-MM-dd")}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -40,7 +69,18 @@ const Dashboard = () => {
 
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Gestión de Leads</h2>
-          <LeadFormDialog onLeadCreated={handleLeadCreated} />
+          <div className="flex gap-2">
+            <Button 
+              onClick={handleExportCSV} 
+              variant="outline" 
+              size="sm"
+              disabled={leads.length === 0}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Exportar CSV
+            </Button>
+            <LeadFormDialog onLeadCreated={handleLeadCreated} />
+          </div>
         </div>
 
         <LeadsTable 
