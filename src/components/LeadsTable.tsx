@@ -60,6 +60,35 @@ const LeadsTable = ({ refreshTrigger }: LeadsTableProps) => {
 
   useEffect(() => {
     fetchLeads();
+
+    // Suscripción en tiempo real para INSERT y UPDATE
+    const channel = supabase
+      .channel("leads-realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "leads" },
+        (payload) => {
+          console.log("Nuevo lead insertado:", payload.new);
+          setLeads((prev) => [payload.new as Lead, ...prev]);
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "leads" },
+        (payload) => {
+          console.log("Lead actualizado:", payload.new);
+          setLeads((prev) =>
+            prev.map((lead) =>
+              lead.id === (payload.new as Lead).id ? (payload.new as Lead) : lead
+            )
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [refreshTrigger]);
 
   const handleEstadoChange = async (leadId: string, nuevoEstado: string) => {
