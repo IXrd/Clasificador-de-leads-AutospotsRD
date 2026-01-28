@@ -160,9 +160,9 @@ const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
               </SelectTrigger>
               <SelectContent>
                 {vehicles.length === 0 ? (
-                  <SelectItem value="" disabled>
+                  <div className="px-2 py-4 text-sm text-muted-foreground text-center">
                     No hay vehículos en el catálogo
-                  </SelectItem>
+                  </div>
                 ) : (
                   vehicles.map((vehicle) => (
                     <SelectItem key={vehicle.id} value={vehicle.nombre}>
