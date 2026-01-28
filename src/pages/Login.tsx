@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Mail, Lock } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Loader2, Mail, Lock, CheckCircle2, AlertCircle } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,13 +15,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setSuccess(null);
+    setShowEmailConfirmation(false);
 
     try {
       if (isLogin) {
@@ -39,9 +39,10 @@ const Login = () => {
         });
 
         if (error) throw error;
-        setSuccess("Cuenta creada exitosamente. Puedes iniciar sesión.");
-        setIsLogin(true);
+        // Limpiar formulario y mostrar alerta de confirmación
+        setEmail("");
         setPassword("");
+        setShowEmailConfirmation(true);
       }
     } catch (err: any) {
       setError(err.message || "Ha ocurrido un error");
@@ -70,9 +71,15 @@ const Login = () => {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            {success && (
-              <Alert>
-                <AlertDescription>{success}</AlertDescription>
+            {showEmailConfirmation && (
+              <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
+                <CheckCircle2 className="h-5 w-5 text-green-600" />
+                <AlertTitle className="text-green-800 dark:text-green-200 font-semibold">
+                  ¡Cuenta creada con éxito!
+                </AlertTitle>
+                <AlertDescription className="text-green-700 dark:text-green-300">
+                  Hemos enviado un enlace de confirmación a tu correo. Por favor, revísalo para activar tu cuenta.
+                </AlertDescription>
               </Alert>
             )}
 
@@ -123,7 +130,7 @@ const Login = () => {
                 onClick={() => {
                   setIsLogin(!isLogin);
                   setError(null);
-                  setSuccess(null);
+                  setShowEmailConfirmation(false);
                 }}
                 className="text-primary hover:underline font-medium"
               >
