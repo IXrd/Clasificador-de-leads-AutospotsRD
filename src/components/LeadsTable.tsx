@@ -46,9 +46,12 @@ interface Lead {
 
 interface LeadsTableProps {
   refreshTrigger?: number;
+  onLeadsChange?: (leads: Lead[]) => void;
 }
 
-const LeadsTable = ({ refreshTrigger }: LeadsTableProps) => {
+export type { Lead };
+
+const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -117,6 +120,11 @@ const LeadsTable = ({ refreshTrigger }: LeadsTableProps) => {
       supabase.removeChannel(channel);
     };
   }, [refreshTrigger]);
+
+  // Notificar cambios de leads al componente padre
+  useEffect(() => {
+    onLeadsChange?.(leads);
+  }, [leads, onLeadsChange]);
 
   // Filtrado en tiempo real
   const filteredLeads = useMemo(() => {
