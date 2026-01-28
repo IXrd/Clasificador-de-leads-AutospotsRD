@@ -23,7 +23,7 @@ import { Plus } from "lucide-react";
 
 interface Vehicle {
   id: number;
-  nombre: string;
+  name: string;
 }
 
 interface LeadFormDialogProps {
@@ -42,10 +42,16 @@ const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
   });
 
   const fetchVehicles = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("vehicles")
-      .select("id, nombre")
-      .order("nombre", { ascending: true });
+      .select("id, name")
+      .order("name", { ascending: true });
+    
+    if (error) {
+      console.error("Error cargando vehículos:", error);
+    } else {
+      console.log("Vehículos para select:", data);
+    }
     
     setVehicles(data || []);
   };
@@ -165,8 +171,8 @@ const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
                   </div>
                 ) : (
                   vehicles.map((vehicle) => (
-                    <SelectItem key={vehicle.id} value={vehicle.nombre}>
-                      {vehicle.nombre}
+                    <SelectItem key={vehicle.id} value={vehicle.name}>
+                      {vehicle.name}
                     </SelectItem>
                   ))
                 )}
