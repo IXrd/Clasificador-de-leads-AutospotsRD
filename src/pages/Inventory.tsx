@@ -10,8 +10,7 @@ import { ArrowLeft, Plus, Trash2, Car } from "lucide-react";
 
 interface Vehicle {
   id: number;
-  nombre: string;
-  created_at: string;
+  name: string;
 }
 
 const Inventory = () => {
@@ -23,18 +22,20 @@ const Inventory = () => {
   const fetchVehicles = async () => {
     const { data, error } = await supabase
       .from("vehicles")
-      .select("*")
-      .order("nombre", { ascending: true });
+      .select("id, name")
+      .order("name", { ascending: true });
 
     if (error) {
+      console.error("Error carga:", error);
       toast({
         title: "Error",
-        description: "No se pudieron cargar los vehículos",
+        description: "No se pudieron cargar los vehículos: " + error.message,
         variant: "destructive",
       });
       return;
     }
 
+    console.log("Vehículos cargados:", data);
     setVehicles(data || []);
   };
 
@@ -56,11 +57,12 @@ const Inventory = () => {
 
     const { error } = await supabase
       .from("vehicles")
-      .insert([{ nombre: newVehicle.trim() }]);
+      .insert([{ name: newVehicle.trim() }]);
 
     setLoading(false);
 
     if (error) {
+      console.error("Error al agregar:", error);
       toast({
         title: "Error",
         description: error.message,
@@ -78,13 +80,14 @@ const Inventory = () => {
     fetchVehicles();
   };
 
-  const handleDeleteVehicle = async (id: number, nombre: string) => {
+  const handleDeleteVehicle = async (id: number, name: string) => {
     const { error } = await supabase
       .from("vehicles")
       .delete()
       .eq("id", id);
 
     if (error) {
+      console.error("Error al eliminar:", error);
       toast({
         title: "Error",
         description: error.message,
@@ -95,7 +98,7 @@ const Inventory = () => {
 
     toast({
       title: "Eliminado",
-      description: `${nombre} fue eliminado del catálogo`,
+      description: `${name} fue eliminado del catálogo`,
     });
 
     fetchVehicles();
@@ -147,12 +150,12 @@ const Inventory = () => {
                     key={vehicle.id}
                     className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
                   >
-                    <span className="font-medium">{vehicle.nombre}</span>
+                    <span className="font-medium">{vehicle.name}</span>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                      onClick={() => handleDeleteVehicle(vehicle.id, vehicle.nombre)}
+                      onClick={() => handleDeleteVehicle(vehicle.id, vehicle.name)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
