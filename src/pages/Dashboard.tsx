@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LogOut, Download } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LogOut, Download, Table2, LayoutGrid } from "lucide-react";
 import LeadFormDialog from "@/components/LeadFormDialog";
 import LeadsTable, { type Lead } from "@/components/LeadsTable";
+import LeadsKanban from "@/components/LeadsKanban";
 import DashboardStats from "@/components/DashboardStats";
 import { Toaster } from "@/components/ui/toaster";
 import { format } from "date-fns";
@@ -14,6 +16,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [viewMode, setViewMode] = useState<"table" | "kanban">("table");
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -67,9 +70,23 @@ const Dashboard = () => {
         {/* Resumen de Negocio */}
         <DashboardStats leads={leads} />
 
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
           <h2 className="text-xl font-semibold">Gestión de Leads</h2>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Toggle de Vista */}
+            <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "table" | "kanban")}>
+              <TabsList className="h-9">
+                <TabsTrigger value="table" className="gap-1.5 px-3">
+                  <Table2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">Tabla</span>
+                </TabsTrigger>
+                <TabsTrigger value="kanban" className="gap-1.5 px-3">
+                  <LayoutGrid className="h-4 w-4" />
+                  <span className="hidden sm:inline">Tablero</span>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
             <Button 
               onClick={handleExportCSV} 
               variant="outline" 
@@ -83,10 +100,14 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <LeadsTable 
-          refreshTrigger={refreshTrigger} 
-          onLeadsChange={setLeads}
-        />
+        {/* Vista condicional */}
+        <div className={viewMode === "table" ? "block" : "hidden"}>
+          <LeadsTable 
+            refreshTrigger={refreshTrigger} 
+            onLeadsChange={setLeads}
+          />
+        </div>
+        {viewMode === "kanban" && <LeadsKanban leads={leads} />}
       </main>
 
       <Toaster />
