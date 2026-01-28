@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Search, Trash2 } from "lucide-react";
+import { Search, Trash2, MessageCircle } from "lucide-react";
 
 interface Lead {
   id: string;
@@ -177,6 +177,16 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
     setDeleteDialogOpen(true);
   };
 
+  const handleWhatsAppClick = (lead: Lead) => {
+    // Limpiar número: solo dígitos
+    const cleanPhone = lead.telefono.replace(/\D/g, "");
+    // Generar mensaje codificado
+    const message = `Hola ${lead.nombre}, vi tu interés en el ${lead.vehiculo_interes} en AutoSpot. ¿Sigues buscando?`;
+    const encodedMessage = encodeURIComponent(message);
+    // Abrir WhatsApp en nueva pestaña
+    window.open(`https://wa.me/${cleanPhone}?text=${encodedMessage}`, "_blank");
+  };
+
   const handleConfirmDelete = async () => {
     if (!leadToDelete) return;
 
@@ -318,14 +328,25 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
                     </Select>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                      onClick={() => handleDeleteClick(lead)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-100"
+                        onClick={() => handleWhatsAppClick(lead)}
+                        title="Contactar por WhatsApp"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => handleDeleteClick(lead)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
