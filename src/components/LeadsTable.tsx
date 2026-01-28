@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Search, Trash2, MessageCircle } from "lucide-react";
+import { Search, Trash2, MessageCircle, Copy } from "lucide-react";
 
 interface Lead {
   id: string;
@@ -187,6 +187,24 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
     window.open(`https://wa.me/${cleanPhone}?text=${encodedMessage}`, "_blank");
   };
 
+  const handleCopyScript = async (lead: Lead) => {
+    const script = `Hola ${lead.nombre}, soy [Tu Nombre] de AutoSpot. Recibí tu consulta sobre el ${lead.vehiculo_interes}. Vi que buscas: "${lead.comentario || 'información'}". Tengo unidades disponibles para entrega inmediata. ¿Te gustaría agendar una prueba de manejo?`;
+    
+    try {
+      await navigator.clipboard.writeText(script);
+      toast({
+        title: "¡Script copiado!",
+        description: "El mensaje de venta está listo para pegar.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error al copiar",
+        description: "No se pudo copiar al portapapeles.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleConfirmDelete = async () => {
     if (!leadToDelete) return;
 
@@ -305,7 +323,20 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
                   <TableCell className="whitespace-nowrap">
                     {format(new Date(lead.created_at), "dd MMM yyyy", { locale: es })}
                   </TableCell>
-                  <TableCell className="font-medium">{lead.nombre}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <span className="font-medium">{lead.nombre}</span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                        onClick={() => handleCopyScript(lead)}
+                        title="Copiar script de venta"
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </TableCell>
                   <TableCell>{lead.telefono}</TableCell>
                   <TableCell>{lead.vehiculo_interes}</TableCell>
                   <TableCell className="hidden md:table-cell max-w-[200px] truncate">
