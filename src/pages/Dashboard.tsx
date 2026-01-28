@@ -4,12 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import LeadFormDialog from "@/components/LeadFormDialog";
-import LeadsTable from "@/components/LeadsTable";
+import LeadsTable, { type Lead } from "@/components/LeadsTable";
+import DashboardStats from "@/components/DashboardStats";
 import { Toaster } from "@/components/ui/toaster";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [leads, setLeads] = useState<Lead[]>([]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -33,12 +35,18 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
+        {/* Resumen de Negocio */}
+        <DashboardStats leads={leads} />
+
+        <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Gestión de Leads</h2>
           <LeadFormDialog onLeadCreated={handleLeadCreated} />
         </div>
 
-        <LeadsTable refreshTrigger={refreshTrigger} />
+        <LeadsTable 
+          refreshTrigger={refreshTrigger} 
+          onLeadsChange={setLeads}
+        />
       </main>
 
       <Toaster />
