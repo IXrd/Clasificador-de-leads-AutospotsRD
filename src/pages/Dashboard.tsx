@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Download, Table2, LayoutGrid } from "lucide-react";
+import { LogOut, Download, Table2, LayoutGrid, Car } from "lucide-react";
 import LeadFormDialog from "@/components/LeadFormDialog";
 import LeadsTable, { type Lead } from "@/components/LeadsTable";
 import LeadsKanban from "@/components/LeadsKanban";
@@ -59,10 +59,16 @@ const Dashboard = () => {
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <Button onClick={handleLogout} variant="outline" size="sm">
-            <LogOut className="mr-2 h-4 w-4" />
-            Cerrar Sesión
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={() => navigate("/inventory")} variant="outline" size="sm">
+              <Car className="mr-2 h-4 w-4" />
+              Vehículos
+            </Button>
+            <Button onClick={handleLogout} variant="outline" size="sm">
+              <LogOut className="mr-2 h-4 w-4" />
+              Cerrar Sesión
+            </Button>
+          </div>
         </div>
       </header>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,11 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
 
+interface Vehicle {
+  id: number;
+  nombre: string;
+}
+
 interface LeadFormDialogProps {
   onLeadCreated?: () => void;
 }
@@ -28,12 +33,28 @@ interface LeadFormDialogProps {
 const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [formData, setFormData] = useState({
     nombre: "",
     telefono: "",
     vehiculo_interes: "",
     comentario: "",
   });
+
+  const fetchVehicles = async () => {
+    const { data } = await supabase
+      .from("vehicles")
+      .select("id, nombre")
+      .order("nombre", { ascending: true });
+    
+    setVehicles(data || []);
+  };
+
+  useEffect(() => {
+    if (open) {
+      fetchVehicles();
+    }
+  }, [open]);
 
   const resetForm = () => {
     setFormData({
@@ -138,9 +159,17 @@ const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
                 <SelectValue placeholder="Selecciona un vehículo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Mustang">Mustang</SelectItem>
-                <SelectItem value="Geely">Geely</SelectItem>
-                <SelectItem value="Rav4">Rav4</SelectItem>
+                {vehicles.length === 0 ? (
+                  <SelectItem value="" disabled>
+                    No hay vehículos en el catálogo
+                  </SelectItem>
+                ) : (
+                  vehicles.map((vehicle) => (
+                    <SelectItem key={vehicle.id} value={vehicle.nombre}>
+                      {vehicle.nombre}
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
           </div>
