@@ -1,13 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 // Configuración de Supabase - Edita estos valores con tus credenciales
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://srduscctovfxbzoxqfuf.supabase.co'; // COLOCA TU URL AQUI
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_secret_EZixBaFB0iKRQu4dUVbJOw_zOSzfU4D'; // COLOCA TU ANON KEY AQUI
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://srduscctovfxbzoxqfuf.supabase.co"; // COLOCA TU URL AQUI
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_zL8CagmB9gGu7yAYH_-teA_IB-neruI"; // COLOCA TU ANON KEY AQUI
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn(
-    'Supabase: Las variables de entorno VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY no están configuradas. ' +
-    'Por favor, agrégalas o edita este archivo directamente.'
+    "Supabase: Las variables de entorno VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY no están configuradas. " +
+      "Por favor, agrégalas o edita este archivo directamente.",
   );
 }
 
