@@ -29,8 +29,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Search, Trash2, MessageCircle, Copy } from "lucide-react";
 
 interface Lead {
@@ -321,7 +327,18 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
               {filteredLeads.map((lead) => (
                 <TableRow key={lead.id}>
                   <TableCell className="whitespace-nowrap">
-                    {format(new Date(lead.created_at), "dd MMM yyyy", { locale: es })}
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="cursor-help text-muted-foreground hover:text-foreground transition-colors">
+                            {formatDistanceToNow(new Date(lead.created_at), { addSuffix: true, locale: es })}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{format(new Date(lead.created_at), "dd 'de' MMMM yyyy, HH:mm", { locale: es })}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
