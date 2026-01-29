@@ -16,7 +16,7 @@ El objetivo es permitir que los vendedores se enfoquen primero en los clientes l
 
 ## 🚀 Demo en Vivo
 
-👉 **[Ver Aplicación Desplegada](PON_AQUI_TU_LINK_DE_LOVABLE)**
+👉 **[Ver Aplicación Desplegada]((https://autospot-brian.lovable.app/dashboard))**
 *(Nota: Regístrate con un correo real para probar el flujo de verificación y notificaciones)*
 
 ---
@@ -24,24 +24,24 @@ El objetivo es permitir que los vendedores se enfoquen primero en los clientes l
 ## 📸 Capturas de Pantalla
 
 ### 1. Dashboard Principal
-*Vista general con métricas, gráficos y tabla Kanban en tiempo real.*
+*Vista general con métricas y tabla Kanban en tiempo real para gestión de estados.*
 
-![AQUI ARRASTRA TU FOTO DEL DASHBOARD (image_e541d8.png)]()
+![Dashboard Principal](./Kahban.png)
 
 ### 2. Clasificación Automática con IA (n8n)
 *Flujo de trabajo backend donde GPT-4o analiza el sentimiento y urgencia del cliente.*
 
-![AQUI ARRASTRA TU FOTO DE N8N (image_e53e93.png)]()
+![Flujo de Automatización](./FlujoN8N.png)
 
 ### 3. Notificaciones Inteligentes
-*Correo HTML que recibe el gerente con la prioridad ya definida.*
+*Correo HTML que recibe el gerente con la prioridad ya definida y formateada.*
 
-![AQUI ARRASTRA TU FOTO DEL CORREO (image_e53e35.png)]()
+![Correo de Notificación](./Correo.png)
 
 ### 4. Gestión de Inventario
 *Módulo dinámico para agregar y eliminar vehículos de la base de datos.*
 
-![AQUI ARRASTRA TU FOTO DEL INVENTARIO (image_e53af6.png)]()
+![Gestión de Inventario](./Inventario.png)
 
 ---
 
@@ -99,6 +99,8 @@ El sistema sigue una arquitectura moderna basada en eventos:
 *Desarrollador Full Stack Jr & Entusiasta de la IA*
 
 ---
+
+> *Este proyecto fue desarrollado como parte de una prueba técnica para demostrar competencias en integración de sistemas modernos, automatización y UX.*
 
 > *Este proyecto fue desarrollado como parte de una prueba técnica para demostrar competencias en integración de sistemas modernos, automatización y UX.*
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
