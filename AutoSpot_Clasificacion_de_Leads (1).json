@@ -1,0 +1,165 @@
+{
+  "name": "AutoSpot_Clasificacion_de_Leads",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-nuevo",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b77d93e6-7e2a-454d-bc4a-fe1a77d82b61",
+      "name": "Webhook",
+      "webhookId": "ab5b2e5d-abbf-4273-9019-5b5372481e3d"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=Actúa como un analista de ventas experto. Tu única función es clasificar la urgencia de un lead basándote en su comentario.\n\nReglas de clasificación:\n\nAlta: Si menciona dinero en mano, pago inmediato, urgencia explícita o fechas muy próximas.\n\nMedia: Si hace preguntas técnicas, pide detalles o compara modelos.\n\nBaja: Si dice 'solo mirando', 'curiosidad' o no muestra prisa.\n\nFORMATO DE RESPUESTA: Responde estrictamente con una sola palabra: Alta, Media o Baja. No añadas puntos ni explicaciones."
+            },
+            {
+              "content": "={{ $json.body.record.comentario }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a244ea84-b97f-477f-80f7-a02616613599",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "XhHQznqhkXuoY40Y",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "leads",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Webhook').item.json.body.record.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "clasificacion",
+              "fieldValue": "={{ $json.output[0].content[0].text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "4d78192c-22d7-476e-9c3f-d82a025c7b94",
+      "name": "Update a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "FbVYE3HD38kiyusA",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "brianmelo1228@gmail.com",
+        "subject": "=Nuevo Lead Clasificado: {{ $json.nombre }}",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n<style>\n  body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }\n  .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }\n  .header { background-color: #2563EB; color: #ffffff; padding: 20px; text-align: center; }\n  .header h1 { margin: 0; font-size: 24px; }\n  .content { padding: 30px; color: #333333; }\n  .tag { display: inline-block; padding: 5px 10px; border-radius: 4px; font-weight: bold; background-color: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }\n  .info-table { width: 100%; margin-top: 20px; border-collapse: collapse; }\n  .info-table td { padding: 12px; border-bottom: 1px solid #eeeeee; }\n  .label { font-weight: bold; color: #666666; width: 120px; }\n  .highlight { font-size: 18px; font-weight: bold; color: #111827; }\n  .footer { background-color: #f9fafb; padding: 15px; text-align: center; font-size: 12px; color: #9ca3af; }\n  .button { display: inline-block; margin-top: 20px; padding: 12px 24px; background-color: #10B981; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }\n</style>\n</head>\n<body>\n\n<div class=\"container\">\n  <div class=\"header\">\n    <h1>🚀 Nuevo Lead Detectado</h1>\n  </div>\n\n  <div class=\"content\">\n    <p>Hola Equipo,</p>\n    <p>El sistema de Inteligencia Artificial ha detectado y clasificado un nuevo prospecto interesado.</p>\n\n    <div style=\"text-align: center; margin: 20px 0; padding: 15px; background-color: #F3F4F6; border-radius: 8px;\">\n      <span style=\"font-size: 14px; color: #6B7280; display: block; margin-bottom: 5px;\">Nivel de Urgencia (IA)</span>\n      <span style=\"font-size: 28px; font-weight: 800; color: #2563EB;\">\n        {{ $('Message a model').item.json.output[0].content[0].text }} \n      </span>\n    </div>\n\n    <table class=\"info-table\">\n      <tr>\n        <td class=\"label\">👤 Cliente:</td>\n        <td class=\"highlight\">\n          {{ $json.nombre }}\n        </td>\n      </tr>\n      <tr>\n        <td class=\"label\">🚗 Vehículo:</td>\n        <td>\n          {{ $('Webhook').item.json.body.record.vehiculo_interes }}\n\n        </td>\n      </tr>\n      <tr>\n        <td class=\"label\">📱 Teléfono:</td>\n        <td>\n          {{ $('Webhook').item.json.body.record.telefono }}\n        </td>\n      </tr>\n      <tr>\n        <td class=\"label\">💬 Comentario:</td>\n        <td style=\"font-style: italic; color: #555;\">\n          \"{{ $('Webhook').item.json.body.record.comentario }}\"\n        </td>\n      </tr>\n    </table>\n\n    <div style=\"text-align: center;\">\n      <a href=\"https://autospot-tu-app.lovable.app\" class=\"button\">Ir al Dashboard</a>\n    </div>\n  </div>\n\n  <div class=\"footer\">\n    <p>Este mensaje fue generado automáticamente por AutoSpot AI Agent.</p>\n  </div>\n</div>\n\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        832,
+        0
+      ],
+      "id": "b20817f9-1d49-454a-8d12-15f1b67e8770",
+      "name": "Send a message",
+      "webhookId": "70de5f90-c526-46b9-919d-b57bb6a419d0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XREnSGUyOSPBAXHq",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a row": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0e05e522-0ead-4aa8-b7b2-8672e5730b77",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3a4fde7261900b8ea55aee4e6323f2215e4ec7285e5022fa991c1f79f135fd10"
+  },
+  "id": "llIxo4WoE8hRdVEM",
+  "tags": []
+}
