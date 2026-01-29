@@ -26,7 +26,7 @@ El objetivo es permitir que los vendedores se enfoquen primero en los clientes l
 ### 1. Dashboard Principal
 *Vista general con métricas y tabla Kanban en tiempo real para gestión de estados.*
 
-![Dashboard Principal](./Kahban.png)
+![Dashboard Principal](./Clasificador.png)
 
 ### 2. Clasificación Automática con IA (n8n)
 *Flujo de trabajo backend donde GPT-4o analiza el sentimiento y urgencia del cliente.*
