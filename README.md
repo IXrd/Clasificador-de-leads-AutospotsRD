@@ -16,7 +16,7 @@ El objetivo es permitir que los vendedores se enfoquen primero en los clientes l
 
 ## 🚀 Demo en Vivo
 
-👉 **[Ver Aplicación Desplegada]((https://autospot-brian.lovable.app/dashboard))**
+👉 **[Ver Aplicación Desplegada](https://autospot-brian.lovable.app/login)**
 *(Nota: Regístrate con un correo real para probar el flujo de verificación y notificaciones)*
 
 ---
@@ -101,8 +101,3 @@ El sistema sigue una arquitectura moderna basada en eventos:
 ---
 
 > *Este proyecto fue desarrollado como parte de una prueba técnica para demostrar competencias en integración de sistemas modernos, automatización y UX.*
-
-> *Este proyecto fue desarrollado como parte de una prueba técnica para demostrar competencias en integración de sistemas modernos, automatización y UX.*
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
