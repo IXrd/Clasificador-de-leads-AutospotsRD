@@ -1,73 +1,106 @@
-# Welcome to your Lovable project
+# 🚗 AutoSpot AI - Smart Lead Manager
 
-## Project info
+**Sistema CRM inteligente para concesionarios automotrices con clasificación automática de leads mediante Inteligencia Artificial.**
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+![Status](https://img.shields.io/badge/Status-Completed-success)
+![AI](https://img.shields.io/badge/AI-Powered-blue)
+![Stack](https://img.shields.io/badge/Full%20Stack-React%20%2B%20Supabase-orange)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 📖 Descripción del Proyecto
 
-**Use Lovable**
+**AutoSpot AI** es una solución Full Stack diseñada para optimizar el flujo de ventas en agencias de vehículos en República Dominicana. A diferencia de un CRM tradicional, este sistema utiliza un **Agente de IA autónomo** que analiza los comentarios de los clientes en tiempo real para determinar su nivel de urgencia de compra (Alta, Media, Baja).
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+El objetivo es permitir que los vendedores se enfoquen primero en los clientes listos para comprar ("dinero en mano"), automatizando la cualificación y notificación.
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Demo en Vivo
 
-**Use your preferred IDE**
+👉 **[Ver Aplicación Desplegada](PON_AQUI_TU_LINK_DE_LOVABLE)**
+*(Nota: Regístrate con un correo real para probar el flujo de verificación y notificaciones)*
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 📸 Capturas de Pantalla
 
-Follow these steps:
+### 1. Dashboard Principal
+*Vista general con métricas, gráficos y tabla Kanban en tiempo real.*
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+![AQUI ARRASTRA TU FOTO DEL DASHBOARD (image_e541d8.png)]()
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 2. Clasificación Automática con IA (n8n)
+*Flujo de trabajo backend donde GPT-4o analiza el sentimiento y urgencia del cliente.*
 
-# Step 3: Install the necessary dependencies.
-npm i
+![AQUI ARRASTRA TU FOTO DE N8N (image_e53e93.png)]()
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### 3. Notificaciones Inteligentes
+*Correo HTML que recibe el gerente con la prioridad ya definida.*
 
-**Edit a file directly in GitHub**
+![AQUI ARRASTRA TU FOTO DEL CORREO (image_e53e35.png)]()
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 4. Gestión de Inventario
+*Módulo dinámico para agregar y eliminar vehículos de la base de datos.*
 
-**Use GitHub Codespaces**
+![AQUI ARRASTRA TU FOTO DEL INVENTARIO (image_e53af6.png)]()
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🛠️ Stack Tecnológico
 
-This project is built with:
+### Frontend
+- **Framework:** React + Vite
+- **Estilos:** Tailwind CSS + Shadcn UI
+- **Plataforma:** Lovable (Desarrollo Acelerado)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Backend & Database
+- **BaaS:** Supabase
+- **Database:** PostgreSQL
+- **Auth:** Supabase Auth (Flujo de confirmación de email)
+- **Realtime:** Supabase Realtime (Websockets para actualizaciones en vivo)
 
-## How can I deploy this project?
+### Automatización & IA
+- **Orquestador:** n8n (Self-hosted)
+- **LLM:** OpenAI GPT-4o-mini
+- **Comunicación:** Webhooks & REST API
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## ✨ Características Principales
 
-Yes, you can!
+### 1. 🧠 Clasificación de Leads con IA
+Cuando un cliente se registra, un **Webhook** envía los datos a n8n. Un agente GPT-4o analiza el sentimiento y semántica del mensaje (ej: "tengo el dinero ya") y actualiza la base de datos con una etiqueta de prioridad: **Alta**, **Media** o **Baja**.
 
+### 2. ⚡ Actualizaciones en Tiempo Real
+Gracias a **Supabase Realtime**, el Dashboard del vendedor se actualiza instantáneamente cuando la IA termina de procesar, sin necesidad de recargar la página.
+
+### 3. 📧 Notificaciones HTML & WhatsApp
+- El sistema envía alertas por correo electrónico con diseño corporativo.
+- Incluye botones **Click-to-Chat de WhatsApp** que generan mensajes personalizados para contactar al cliente en un clic.
+
+### 4. 🛡️ Seguridad RLS
+Implementación de Row Level Security (RLS) en PostgreSQL para proteger la integridad de los datos, permitiendo acceso seguro a la gestión de inventario y leads.
+
+---
+
+## 🏗️ Arquitectura del Flujo de Datos
+
+El sistema sigue una arquitectura moderna basada en eventos:
+
+1. **Cliente:** Llena formulario en React.
+2. **Supabase:** Guarda el lead y dispara Webhook.
+3. **n8n:** Recibe datos -> Consulta a OpenAI -> Actualiza Supabase -> Envía Email.
+4. **Dashboard:** Recibe el cambio vía WebSocket y muestra la etiqueta "Alta Prioridad" al instante.
+
+---
+
+## 👤 Autor
+
+**Brian Melo**
+*Desarrollador Full Stack Jr & Entusiasta de la IA*
+
+---
+
+> *Este proyecto fue desarrollado como parte de una prueba técnica para demostrar competencias en integración de sistemas modernos, automatización y UX.*
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
