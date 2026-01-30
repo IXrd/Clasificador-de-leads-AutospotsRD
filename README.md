@@ -96,7 +96,7 @@ El sistema sigue una arquitectura moderna basada en eventos:
 ## 👤 Autor
 
 **Brian Melo**
-*Desarrollador Full Stack Jr & Entusiasta de la IA*
+*Entusiasta de la IA*
 
 ---
 
