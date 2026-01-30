@@ -37,7 +37,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Search, Trash2, MessageCircle, Copy } from "lucide-react";
+import { Search, Trash2, MessageCircle, Copy, Pencil } from "lucide-react";
+import LeadEditDialog from "./LeadEditDialog";
 
 interface Lead {
   id: string;
@@ -69,6 +70,10 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
   // Delete dialog
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+
+  // Edit dialog
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [leadToEdit, setLeadToEdit] = useState<Lead | null>(null);
 
   const fetchLeads = async () => {
     setLoading(true);
@@ -181,6 +186,17 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
   const handleDeleteClick = (lead: Lead) => {
     setLeadToDelete(lead);
     setDeleteDialogOpen(true);
+  };
+
+  const handleEditClick = (lead: Lead) => {
+    setLeadToEdit(lead);
+    setEditDialogOpen(true);
+  };
+
+  const handleLeadUpdated = () => {
+    // La suscripción en tiempo real ya maneja la actualización
+    // pero podemos forzar un refresh si es necesario
+    fetchLeads();
   };
 
   const handleWhatsAppClick = (lead: Lead) => {
@@ -380,6 +396,15 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
                       <Button
                         variant="ghost"
                         size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+                        onClick={() => handleEditClick(lead)}
+                        title="Editar lead"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-100"
                         onClick={() => handleWhatsAppClick(lead)}
                         title="Contactar por WhatsApp"
@@ -391,6 +416,7 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
                         size="icon"
                         className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={() => handleDeleteClick(lead)}
+                        title="Eliminar lead"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -423,6 +449,14 @@ const LeadsTable = ({ refreshTrigger, onLeadsChange }: LeadsTableProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Diálogo de edición de lead */}
+      <LeadEditDialog
+        lead={leadToEdit}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onLeadUpdated={handleLeadUpdated}
+      />
     </div>
   );
 };
