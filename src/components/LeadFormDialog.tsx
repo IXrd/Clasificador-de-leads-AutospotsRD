@@ -20,6 +20,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
+import { sanitizeInput } from "@/lib/sanitize";
 
 interface Vehicle {
   id: number;
@@ -96,10 +97,10 @@ const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
 
     const { error } = await supabase.from("leads").insert([
       {
-        nombre: formData.nombre,
+        nombre: sanitizeInput(formData.nombre),
         telefono: formData.telefono,
-        vehiculo_interes: formData.vehiculo_interes,
-        comentario: formData.comentario,
+        vehiculo_interes: sanitizeInput(formData.vehiculo_interes),
+        comentario: sanitizeInput(formData.comentario),
         estado: "Nuevo",
         user_email: userEmail,
       },
