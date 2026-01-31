@@ -85,6 +85,10 @@ const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
 
     setLoading(true);
 
+    // Obtener el email del usuario autenticado
+    const { data: { user } } = await supabase.auth.getUser();
+    const userEmail = user?.email || "";
+
     const { error } = await supabase.from("leads").insert([
       {
         nombre: formData.nombre,
@@ -92,6 +96,7 @@ const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
         vehiculo_interes: formData.vehiculo_interes,
         comentario: formData.comentario,
         estado: "Nuevo",
+        user_email: userEmail,
       },
     ]);
 
