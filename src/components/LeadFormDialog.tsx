@@ -86,8 +86,13 @@ const LeadFormDialog = ({ onLeadCreated }: LeadFormDialogProps) => {
     setLoading(true);
 
     // Obtener el email del usuario autenticado
-    const { data: { user } } = await supabase.auth.getUser();
-    const userEmail = user?.email || "";
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    console.log("Usuario autenticado:", user);
+    console.log("Error de auth:", authError);
+    
+    const userEmail = user?.email || "anónimo";
+    console.log("Email a guardar:", userEmail);
 
     const { error } = await supabase.from("leads").insert([
       {
