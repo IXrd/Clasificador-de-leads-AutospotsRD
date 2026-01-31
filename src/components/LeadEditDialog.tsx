@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+import { sanitizeInput } from "@/lib/sanitize";
 
 interface Lead {
   id: string;
@@ -95,10 +96,10 @@ const LeadEditDialog = ({ lead, open, onOpenChange, onLeadUpdated }: LeadEditDia
     const { error } = await supabase
       .from("leads")
       .update({
-        nombre: nombre.trim(),
+        nombre: sanitizeInput(nombre),
         telefono: telefono.trim(),
-        vehiculo_interes: vehiculoInteres,
-        comentario: comentario.trim(),
+        vehiculo_interes: sanitizeInput(vehiculoInteres),
+        comentario: sanitizeInput(comentario),
         estado,
       })
       .eq("id", lead.id);
